@@ -122,11 +122,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * OPTIMIZEANIMS
  * OPTIMIZEGRAPH
  * GENENTITYMESHES
- * FIXTEXTUREPATHS
- * GENBOUNDINGBOXES */
+ * FIXTEXTUREPATHS */
 //////////////////////////////////////////////////////////////////////////
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #   undef ASSIMP_API
 
     //////////////////////////////////////////////////////////////////////////
@@ -135,9 +134,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #   ifdef ASSIMP_BUILD_DLL_EXPORT
 #       define ASSIMP_API __declspec(dllexport)
 #       define ASSIMP_API_WINONLY __declspec(dllexport)
-#       ifdef _MSC_VER
-#           pragma warning (disable : 4251)
-#       endif
+#       pragma warning (disable : 4251)
 
     //////////////////////////////////////////////////////////////////////////
     /* Define 'ASSIMP_DLL' before including Assimp to link to ASSIMP in
@@ -170,7 +167,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #   define ASSIMP_API __attribute__ ((visibility("default")))
 #   define ASSIMP_API_WINONLY
 #   define AI_FORCE_INLINE inline
-#endif // (defined _WIN32)
+#endif // (defined _MSC_VER)
 
 #ifdef __GNUC__
 #   define AI_WONT_RETURN_SUFFIX  __attribute__((noreturn))
@@ -217,7 +214,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #if (defined(__BORLANDC__) || defined (__BCPLUSPLUS__))
-#   error Currently, Borland is unsupported. Feel free to port Assimp.
+#error Currently, Borland is unsupported. Feel free to port Assimp.
+
+// "W8059 Packgröße der Struktur geändert"
+
 #endif
 
 
@@ -243,16 +243,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     typedef double ai_real;
     typedef signed long long int ai_int;
     typedef unsigned long long int ai_uint;
-#ifndef ASSIMP_AI_REAL_TEXT_PRECISION
-#define ASSIMP_AI_REAL_TEXT_PRECISION 16
-#endif // ASSIMP_AI_REAL_TEXT_PRECISION
 #else // ASSIMP_DOUBLE_PRECISION
     typedef float ai_real;
     typedef signed int ai_int;
     typedef unsigned int ai_uint;
-#ifndef ASSIMP_AI_REAL_TEXT_PRECISION
-#define ASSIMP_AI_REAL_TEXT_PRECISION 8
-#endif // ASSIMP_AI_REAL_TEXT_PRECISION
 #endif // ASSIMP_DOUBLE_PRECISION
 
     //////////////////////////////////////////////////////////////////////////
@@ -272,9 +266,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* Tiny macro to convert from radians to degrees and back */
 #define AI_DEG_TO_RAD(x) ((x)*(ai_real)0.0174532925)
 #define AI_RAD_TO_DEG(x) ((x)*(ai_real)57.2957795)
-
-/* Numerical limits */
-static const ai_real ai_epsilon = (ai_real) 0.00001;
 
 /* Support for big-endian builds */
 #if defined(__BYTE_ORDER__)
@@ -307,6 +298,6 @@ static const ai_real ai_epsilon = (ai_real) 0.00001;
 #  else
 #    define AI_NO_EXCEPT
 #  endif
-#endif // _MSC_VER
+#endif
 
 #endif // !! AI_DEFINES_H_INC
